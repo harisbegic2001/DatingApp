@@ -1,0 +1,17 @@
+  <form *ngIf="!loggedIn" #registerForm="ngForm" (ngSubmit)="register()" autocomplete="off" style="margin-top: 100px; margin-left: 50px;">
+    <input 
+    name="username"
+    [(ngModel)]="model.username"
+    type="text"
+    placeholder="Your Username"
+    >
+    <br>
+    <input 
+    name="password"
+    [(ngModel)]="model.password"
+    type="password"
+    placeholder="Your new password"
+    >
+    <br>
+    <button class="btn btn-outline-success" type="submit" >register</button>
+  </form>
