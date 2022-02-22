@@ -37,6 +37,7 @@ namespace API.Controllers
             var user = new AppUser{
                 UserName = registerDto.Username.ToLower(),
                 PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
+            
                 PasswordSalt = hmac.Key /*Ovo*/
             };
 
@@ -82,12 +83,34 @@ namespace API.Controllers
         public ActionResult DeleteUsers(int id){
             var korisnik = _context.AppUsers.SingleOrDefault(x => x.Id == id);
             if(korisnik == null){
-                return Ok();
+                return NotFound();
             }
             _context.AppUsers.Remove(korisnik);
             _context.SaveChanges();
             return NoContent();
         }
 
+/*
+        [HttpGet]
+        public ActionResult GetAllPasswords()
+        {
+                var cryptedPasswords = _context.AppPasswords.ToListAsync();
+                var returnPasswords = List<Passwords>();
+                foreach (var password in cryptedPasswords)
+                {
+                    returnPasswords.Add(decryptedPassword(password));
+
+                }
+
+                return Ok(returnPasswords);
+        }
+
+        private decryptedPassword(string password){
+            string decryptPass = "";
+            if(password[0] == "11") decryptPass += "A";
+
+
+            return decryptPass;
+        }*/
     }
 }

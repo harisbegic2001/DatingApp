@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+
+
 import { AccountService } from '../_services/account.service';
 
 @Component({
@@ -7,10 +10,13 @@ import { AccountService } from '../_services/account.service';
   styleUrls: ['./reg.component.css']
 })
 export class RegComponent implements OnInit {
-model: any = {}
-loggedIn!: boolean
 
-constructor(private accountService: AccountService) { }
+@Output() cancelRegister = new EventEmitter(); /*Ovaj dio koda nam koristi da cancelujemo preko dugmeta šta nam se prikazuje*/ 
+  
+model: any = {}
+
+
+constructor(private accountService: AccountService, private toastr: ToastrService) { }
 
   ngOnInit(): void { 
   }
@@ -18,10 +24,17 @@ constructor(private accountService: AccountService) { }
   register(){
     this.accountService.register(this.model).subscribe(response => {
       console.log("Uspješna registracija");
+      this.cancel();
     }, error =>{
       console.log(error);
+      this.toastr.error(error.error)
       
     });
+  }
+
+  cancel(){
+    this.cancelRegister.emit(false);
+    
   }
 
 }

@@ -2,48 +2,53 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
+using API.DTOs;
 using API.Entities;
+using API.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-
+    //[Authorize]
     public class UsersController : BaseApiController
     {
-        private readonly DataContext _context;
+    private readonly IUserRepository _userRepository;
+    private readonly IMapper _mapper;
 
-        public UsersController(DataContext context)
+        public UsersController(IUserRepository userRepostiory, IMapper mapper)
         {
-            _context = context;
+            _userRepository = userRepostiory;
+            _mapper = mapper;
         }
 
     
         [HttpGet]
-        [AllowAnonymous]
-        public async  Task<ActionResult <IEnumerable<AppUser>>> GetAllUsers(){
+        public async  Task<ActionResult <IEnumerable<MemberDto>>> GetUsers(){
 
-        var users = _context.AppUsers.ToListAsync();
-        return  await users;
+        var users =  await _userRepository.GetMembersAsync();
+        return Ok(users);
         }
 
-        [Authorize]
-        [HttpGet("{id}")]
-        public async Task<ActionResult <AppUser>> GetUser(int id)
+        [HttpGet("{username}")]
+        public async Task<ActionResult <MemberDto>> GetUser(string username)
         {
-            var user = _context.AppUsers.FindAsync(id);
-            return await user;
+            return await _userRepository.GetMemberAsync(username);
+
+            
         }
 
 
-        [HttpPost]
-        public ActionResult<AppUser> CreateUser(AppUser appUser) /*Ovdjeeeee*/
-        {
-        _context.AppUsers.Add(appUser);
-        _context.SaveChanges();
-        return Ok(appUser);
+
+        // [HttpPost]
+        // public ActionResult<AppUser> CreateUser(AppUser appUser) /*Ovdjeeeee*/
+        // {
+        // _context.AppUsers.Add(appUser);
+        // _context.SaveChanges();
+        // return Ok(appUser);
         
-        }
+        // }
     }
 }

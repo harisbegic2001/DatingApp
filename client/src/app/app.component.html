@@ -1,13 +1,5 @@
-<app-reg></app-reg>
 <app-nav></app-nav>
-<style>
-.harisjebioovdje{
-  color: red;
-}
-</style>
 
-<div class="container" style="margin-top: 100px;">
-  <ul class="harisjebioovdje">
-  <li *ngFor='let user of users'>{{user.id}} - {{user.userName}}</li>
-</ul>
+<div class="container" style="margin-top: 100px">
+    <router-outlet></router-outlet>
 </div>
